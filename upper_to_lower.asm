@@ -12,7 +12,7 @@ _start:
 loop: add byte [ebx], 32   ; somo o caractere contido no endereço apontado por bx (byte [ebx]) com o número 32
       inc ebx              ; incremento ebx (passa a apontar para o próximo caractere)
       dec eax              ; decremento eax
-      jnz loop             ; jump para o label 'loop' caso a última operação (dec eax) resulte em 0
+      jnz loop             ; jump para o label 'loop' caso a última operação (dec eax) não resulte em 0
 
       mov eax, 4           ; sys_write
       mov ebx, 1           ; file descriptor 1 (stdout)
