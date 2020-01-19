@@ -9,10 +9,10 @@ _start:
       mov ebx, palavra     ; endereço de 'palavra' é atribuído à ebx
       mov eax, tamanho - 1 ; uso o eax como acumulador para armazenar o tamanho da palavra - 1
 
-loop: add byte [ebx], 32   ; somo o caractere contido no endereço apontado por bx (byte [ebx]) com o número 32
+loop: add byte [ebx], 32   ; somo o caractere (byte [ebx]) contido no endereço apontado por ebx com o número 32
       inc ebx              ; incremento ebx (passa a apontar para o próximo caractere)
       dec eax              ; decremento eax
-      jnz loop             ; jump para o label 'loop' caso a última operação (dec eax) resulte em 0
+      jnz loop             ; jump para o label 'loop' caso a última operação (dec eax) não resulte em 0
 
       mov eax, 4           ; sys_write
       mov ebx, 1           ; file descriptor 1 (stdout)
