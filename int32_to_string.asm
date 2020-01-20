@@ -6,7 +6,7 @@
 ; 
 ; The program works that way:
 ;   * number = 12345 (i'm using 12345 as an example)
-;   * buffer = array of 10 bytes (that means the number can have up to 10 digits)
+;   * buffer = array of 11 bytes (that means the number can have up to 10 digits + '\n' included at the end)
 ;   * Parse each digit by dividing 'number' by 10.
 ;   * Sums the current digit with 0x30 to create the ascii form of the digit. 0x5 + 0x30 = 0x35 (or the character '5')
 ;   * After creating the ascii form of the digit, push it into the stack, so the first digit (from rigth to left) will be at the top
@@ -23,7 +23,7 @@ section .data
   number: equ 478492981    ; number to be converted to string
 
 section .bss
-  buffer: resb 10          ; reserve 10 bytes in memory to buffer that will contain the number in string format
+  buffer: resb 11          ; reserve 11 bytes in memory to buffer that will contain the number in string format
 
 section .text
   global _start
