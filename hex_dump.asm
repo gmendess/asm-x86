@@ -1,4 +1,4 @@
-; Read an binary file from stdin by Linux input redirection and converts it's bytes to an
+; Read a binary file from stdin by Linux input redirection and converts it's bytes to an
 ; hexadecimal string  and prints the result on  stdout (you can also  redirect the output
 ; to a file by output redirection) 
 ;
