@@ -2,6 +2,10 @@
 ; The number of arguments that can be printed is defined by MAX_ARGS, which has 
 ; 10 as default value. Change it if you want to print more than 10 arguments!
 
+; nasm -f elf32 show_args.asm
+; ld -m elf_i386 show_args.o -o show_args
+; ./show_args [ARG1] [ARG2] [ARG3] ...
+
 section .data
   MAX_ARGS: equ 10 ; max number of arguments the program supports
 
