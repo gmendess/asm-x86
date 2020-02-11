@@ -10,7 +10,7 @@ endstruc
 ;   struct node* create_node(int value);
 ;
 ; @return:
-;   return the pointer in 'eax'    
+;   return the pointer in 'eax'
 create_node:
   push ebp        ; save ebp onto the stack
   mov ebp, esp    ; ebp points to the top of the stack, creating a stack frame
@@ -25,6 +25,44 @@ create_node:
   mov [eax + node.value], ebx     ; initialize node.value with ebx
   mov dword [eax + node.next], 0  ; node.next = null pointer
 
+  mov esp, ebp    ; esp points to the old top of the stack, saved in ebp
+  pop ebp         ; pop the old ebp value into ebp, destroying the stack frame
+
+  ret             ; return to caller
+
+
+; Function that append a node in the list
+; @prototype:
+;   void add_node(int value);
+add_node:
+  push ebp      ; save ebp onto the stack
+  mov ebp, esp  ; ebp points to the top of the stack, creating a stack frame
+  push ebx      ; save caller's ebx
+
+  push dword [ebp + 8] ; pass to create_node the parameter 'value' passed to add_node
+  call create_node     ; alloc memory to a node and initialize the member .value (return pointer in eax)
+  add esp, 4           ; clean up the list
+
+  mov ebx, list_head   ; copy to ebx the address of list_head
+  test dword [ebx], 0xFFFFFFFF ; check if ebx is a null pointer (all 32 bits = 0)
+  jnz .iterate_list    ; if no, the list is not empty, so iterate it to get the last node
+
+  mov [ebx], eax       ; list_head points to eax (first node)
+  jmp .return_now      ; return to caller
+
+
+.iterate_list:
+  mov ebx, [ebx]    ; ebx stores the address of the current node
+  test dword [ebx + node.next], 0xFFFFFFFF ; check if the next node is a null pointer
+  jz .add_at_end    ; if yes, we reached the last node, so it's .next member must point to eax
+  add ebx, 4        ; now ebx is the pointer to the next node
+  jmp .iterate_list ; jump again to .iterate_list to check if the current node is the last one
+
+.add_at_end:
+  mov [ebx + node.next], eax
+
+.return_now:
+  pop ebx         ; restore caller's ebx
   mov esp, ebp    ; esp points to the old top of the stack, saved in ebp
   pop ebp         ; pop the old ebp value into ebp, destroying the stack frame
 
