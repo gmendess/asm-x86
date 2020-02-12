@@ -51,6 +51,18 @@ main:
   call printf
   add esp, 8
 
+  mov ebx, list_head ; points to first node
+  call get_last_node
+  push dword [ebx + node.value]
+  push fmt
+  call printf
+  add esp, 8
+
+  push dword [edx + node.value]
+  push fmt
+  call printf
+  add esp, 8
+  
   mov esp, ebp
   pop ebp
   ret
