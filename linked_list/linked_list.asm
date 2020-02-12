@@ -31,7 +31,7 @@ create_node:
   ret             ; return to caller
 
 
-; Function that append a node in the list
+; Function that appends a node in the list
 ; @prototype:
 ;   void add_node(int value);
 add_node:
@@ -45,21 +45,15 @@ add_node:
 
   mov ebx, list_head   ; copy to ebx the address of list_head
   test dword [ebx], 0xFFFFFFFF ; check if ebx is a null pointer (all 32 bits = 0)
-  jnz .iterate_list    ; if no, the list is not empty, so iterate it to get the last node
+  jnz .last_node       ; if no, the list is not empty, so call get_last_node
 
   mov [ebx], eax       ; list_head points to eax (first node)
   jmp .return_now      ; return to caller
 
+.last_node:
+  call get_last_node   ; iterate the list to get the last node (return pointer in ebx)
 
-.iterate_list:
-  mov ebx, [ebx]    ; ebx stores the address of the current node
-  test dword [ebx + node.next], 0xFFFFFFFF ; check if the next node is a null pointer
-  jz .add_at_end    ; if yes, we reached the last node, so it's .next member must point to eax
-  add ebx, 4        ; now ebx is the pointer to the next node
-  jmp .iterate_list ; jump again to .iterate_list to check if the current node is the last one
-
-.add_at_end:
-  mov [ebx + node.next], eax
+  mov [ebx + node.next], eax  ; last node .next member points to the new node
 
 .return_now:
   pop ebx         ; restore caller's ebx
@@ -67,3 +61,24 @@ add_node:
   pop ebp         ; pop the old ebp value into ebp, destroying the stack frame
 
   ret             ; return to caller
+
+; Function that gets the last node in a list
+; @parameter:
+;   struct node* get_last_node(void)
+; @return:
+;   return the pointer in ebx
+get_last_node:
+  push ebp
+  mov ebp, esp
+
+.iterate_list:
+  mov ebx, [ebx]    ; ebx stores the address of the current node
+  test dword [ebx + node.next], 0xFFFFFFFF ; check if the next node is a null pointer
+  jz .return_now    ; if yes, we reached the last node, so it's .next member must point to eax
+  add ebx, 4        ; now ebx is the pointer to the next node
+  jmp .iterate_list ; jump again to .iterate_list to check if the current node is the last one
+
+.return_now:
+  mov esp, ebp
+  pop ebp
+  ret
