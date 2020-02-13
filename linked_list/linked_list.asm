@@ -1,4 +1,5 @@
 extern malloc
+extern free
 
 struc node
   .value: resb 4
@@ -81,6 +82,37 @@ get_last_node:
   mov edi, ebx      ; save the node address in edi
   add ebx, 4        ; now ebx is the pointer to the next node
   jmp .iterate_list ; jump again to .iterate_list to check if the current node is the last one
+
+.return_now:
+  mov esp, ebp
+  pop ebp
+  ret
+
+; Funtion that remove the last node in a list and return it's data
+; @prototype:
+;   int pop_node(void)
+; @return:
+;   return the integer in edi
+pop_node:
+  push ebp
+  mov ebp, esp
+
+  xor eax, eax                  ; default return value
+
+  mov ebx, list_head            ; copy list_head to ebx
+  test dword [ebx], 0xFFFFFFFF  ; check if the list is empty
+  jz .return_now                 ; if so, return now with default return value (0)
+
+  call get_last_node            ; else, store the last node in ebx
+  push dword [ebx + node.value] ; save the value of the last node onto the stack
+  
+  push ebx                      ; push node address to free
+  call free                     ; call free to deallocate the node
+  add esp, 4                    ; clear up the stack
+
+  pop eax                       ; pop the saved value in eax
+
+  mov [edi + node.next], dword 0
 
 .return_now:
   mov esp, ebp
