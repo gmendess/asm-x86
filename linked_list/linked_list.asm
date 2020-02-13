@@ -68,17 +68,17 @@ add_node:
 ;   struct node* -´
 ; @return:
 ;   return the last node in ebx
-;   return previews node in edx
+;   return previews node in edi
 get_last_node:
   push ebp
   mov ebp, esp
 
-  xor edx, edx
+  xor edi, edi
 .iterate_list:
   mov ebx, [ebx]    ; ebx stores the address of the current node
   test dword [ebx + node.next], 0xFFFFFFFF ; check if the next node is a null pointer
   jz .return_now    ; if yes, we reached the last node, so it's .next member must point to eax
-  mov edx, ebx      ; save the node address in edx
+  mov edi, ebx      ; save the node address in edi
   add ebx, 4        ; now ebx is the pointer to the next node
   jmp .iterate_list ; jump again to .iterate_list to check if the current node is the last one
 

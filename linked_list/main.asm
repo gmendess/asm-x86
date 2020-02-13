@@ -58,7 +58,7 @@ main:
   call printf
   add esp, 8
 
-  push dword [edx + node.value]
+  push dword [edi + node.value]
   push fmt
   call printf
   add esp, 8
